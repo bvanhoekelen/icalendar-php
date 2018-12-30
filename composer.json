@@ -1,0 +1,46 @@
+{
+    "name": "bvanhoekelen/icalendar-php",
+    "description": "Create easily a full iCalendar subscription service. Compatible with the best Calendar Apps, Laravel and Composer.",
+    "keywords": [
+        "php",
+        "iCal",
+        "vCal",
+        ".ics",
+        "iCalendar",
+        "vCalendar",
+        "iCal subscription",
+        "iCalendar subscription",
+        "iCalendar subscription tool",
+        "iCalendar subscription library",
+        "iCalendar tool",
+        "iCalendar parser",
+        "iCalendar generator",
+        "iCalendar compleet",
+        "simple",
+        "completely",
+        "laravel",
+        "web"
+    ],
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "B. van Hoekelen",
+            "homepage": "https://github.com/bvanhoekelen/icalendar-php"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.0"
+    },
+    "require-dev": {
+        "larapack/dd": "1.*",
+        "phpunit/phpunit": "^5.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Calendar\\": "src/"
+        }
+    },
+    "archive": {
+        "exclude": ["assets"]
+    }
+}
