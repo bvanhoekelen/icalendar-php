@@ -10,7 +10,7 @@ class LineBag {
 	 *
 	 * @param string $line
 	 */
-	public function set(string $line) : void {
+	public function set(string $line): void {
 		$this->lines[] = $line;
 	}
 
@@ -19,9 +19,9 @@ class LineBag {
 	 *
 	 * @return string
 	 */
-	public function render() : string {
+	public function render(): string {
 		$content = '';
-		foreach ($this->lines as $line){
+		foreach ($this->lines as $line) {
 			$content .= $this->limitLine($line) . static::LINE_BREAK;
 		}
 		return $content;
@@ -32,13 +32,13 @@ class LineBag {
 	 * @param string $line
 	 * @return string
 	 */
-	protected function limitLine(string $line) : string {
+	protected function limitLine(string $line): string {
 		$count = strlen($line);
-		if($count < static::LINE_LIMIT){
+		if ($count < static::LINE_LIMIT) {
 			return $line;
 		}
 		$body = substr($line, 0, static::LINE_LIMIT) . static::LINE_BREAK;
-		for($x = static::LINE_LIMIT; $x < $count; $x += static::LINE_LIMIT - 1){
+		for ($x = static::LINE_LIMIT; $x < $count; $x += static::LINE_LIMIT - 1) {
 			$body .= ' ' . substr($line, $x, static::LINE_LIMIT - 1) . static::LINE_BREAK;
 		}
 		return $body;
