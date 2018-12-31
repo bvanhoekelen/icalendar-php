@@ -28,6 +28,18 @@ class Property {
 		$this->propertyList[$position] = new PropertyItem($element, $value);
 	}
 
+	public function get($element, $position = null){
+		if(!$position and isset($this->propertyPositionList[$element])){
+			$position =  $this->propertyPositionList[$element];
+		}
+		if($position >= 0){
+			if (isset($this->propertyList[$position])) {
+				return $this->propertyList[$position];
+			}
+			return null;
+		}
+	}
+
 	public function getPropertyList(): array {
 		return $this->propertyList;
 	}
@@ -39,6 +51,9 @@ class Property {
 		if (count($item->getParams())) {
 			$lines = [];
 			foreach ($item->getParams() as $paramKey => $paramValue) {
+				if(is_array($paramValue)){
+					$paramValue = implode(',', $paramValue);
+				}
 				if ($paramKey) {
 					$lines[] = $paramKey . '=' . $paramValue;
 				}
@@ -46,7 +61,7 @@ class Property {
 					$lines[] = $paramValue;
 				}
 			}
-			return $item->getName() . ';' . implode(";", $lines);
+			return $item->getName() . ';' . implode(';', $lines);
 		}
 		return $item->getName();
 	}
