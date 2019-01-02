@@ -6,6 +6,10 @@ class RepeatingRuleType {
 	protected $count;
 	protected $until;
 	protected $interval;
+	protected $byDay;
+	protected $byMonth;
+	protected $byMonthDay;
+	protected $bySetPos;
 
 	protected $rules;
 
@@ -19,10 +23,10 @@ class RepeatingRuleType {
 	const BYMINUTE = 'BYMINUTE';
 	const BYHOUR = 'BYHOUR';
 	const BYDAY = 'BYDAY';
+	const BYMONTH = 'BYMONTH';
+	const BYWEEKNO = 'BYWEEKNO';
 	const BYMONTHDAY = 'BYMONTHDAY';
 	const BYYEARDAY = 'BYYEARDAY';
-	const BYWEEKNO = 'BYWEEKNO';
-	const BYMONTH = 'BYMONTH';
 	const BYSETPOS = 'BYSETPOS';
 	const WKST = 'WKST';
 
@@ -35,7 +39,7 @@ class RepeatingRuleType {
 	const FREQ_MONTHLY = 'MONTHLY';
 	const FREQ_YEARLY = 'YEARLY';
 
-	// BYDay
+	// ByDay
 	const BYDAY_SU = 'SU';
 	const BYDAY_MO = 'MO';
 	const BYDAY_TU = 'TU';
@@ -43,6 +47,27 @@ class RepeatingRuleType {
 	const BYDAY_TH = 'TH';
 	const BYDAY_FR = 'FR';
 	const BYDAY_SA = 'SA';
+
+	// ByMonth
+	const BYMONTH_JAN = 1;
+	const BYMONTH_FEB = 2;
+	const BYMONTH_MAR = 3;
+	const BYMONTH_APR = 4;
+	const BYMONTH_MAY = 5;
+	const BYMONTH_JUN = 6;
+	const BYMONTH_JUL = 7;
+	const BYMONTH_AUG = 8;
+	const BYMONTH_SEP = 9;
+	const BYMONTH_OCT = 10;
+	const BYMONTH_NOV = 11;
+	const BYMONTH_DEC = 12;
+
+	// Set pos
+	const BYSETPOS_FIRST = 1;
+	const BYSETPOS_SECOND = 2;
+	const BYSETPOS_THIRD = 3;
+	const BYSETPOS_FOURTH = 4;
+	const BYSETPOS_LAST = -1;
 
 	public function __construct(array $rules = []) {
 		$this->rules = $rules;
@@ -60,10 +85,68 @@ class RepeatingRuleType {
 		$this->interval = $interval;
 	}
 
+	public function setFrequency(string $frequency): self {
+		$this->frequency = $frequency;
+		return $this;
+	}
+
+	public function setCount(int $count): self {
+		$this->count = $count;
+		return $this;
+	}
+
+	public function setUntil(\DateTime $until): self {
+		$this->until = $until;
+		return $this;
+	}
+
+	public function setInterval(int $interval): self {
+		$this->interval = $interval;
+		return $this;
+	}
+
+	public function setByDay($mixed): self {
+		$this->byDay = $mixed;
+		return $this;
+	}
+
+	public function setByMonth(int $monthNumber): self {
+		$this->byMonth = $monthNumber;
+		return $this;
+	}
+
+	public function setByMonthDay(int $dayNumber): self {
+		$this->byMonthDay = $dayNumber;
+		return $this;
+	}
+
+	public function setBySetPos(int $value): self {
+		$this->bySetPos = $value;
+		return $this;
+	}
+
+	// Rules
+	public function setRules(array $rules): self {
+		$this->rules = $rules;
+		return $this;
+	}
+
 	public function getRules(): array {
 		$rules = $this->rules;
 		if ($this->frequency) {
 			$rules[static::FREQ] = $this->frequency;
+		}
+		if ($this->byDay) {
+			$rules[static::BYDAY] = $this->byDay;
+		}
+		if ($this->byMonth) {
+			$rules[static::BYMONTH] = $this->byMonth;
+		}
+		if ($this->byMonthDay) {
+			$rules[static::BYMONTHDAY] = $this->byMonthDay;
+		}
+		if ($this->bySetPos) {
+			$rules[static::BYSETPOS] = $this->bySetPos;
 		}
 		if ($this->count) {
 			$rules[static::COUNT] = $this->count;
@@ -75,27 +158,6 @@ class RepeatingRuleType {
 		if ($this->interval) {
 			$rules[static::INTERVAL] = $this->interval;
 		}
-
 		return $rules;
-	}
-
-	public function setFrequency(string $frequency): void {
-		$this->frequency = $frequency;
-	}
-
-	public function setCount(int $count): void {
-		$this->count = $count;
-	}
-
-	public function setUntil(\DateTime $until): void {
-		$this->until = $until;
-	}
-
-	public function setInterval(int $interval): void {
-		$this->interval = $interval;
-	}
-
-	public function setRules(array $rules): void {
-		$this->rules = $rules;
 	}
 }
