@@ -20,7 +20,6 @@ use Calendar\Element\Event;
 use Calendar\Type\RepeatingRule;
 
 $calender = (new Calendar())
-	->setMethod(Calendar::METHOD_PUBLISH)
 	->setColor('#00A677')
 	->setName('Custom name')
 	->setDescription('Custom description')
