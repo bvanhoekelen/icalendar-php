@@ -1,7 +1,6 @@
 <?php namespace Calendar\Type;
 
-class DateTimeType {
-
+class DateTime {
 	const LAYOUT_DATE = 'Ymd';
 	const LAYOUT_DATE_TIME_ZONE = 'Ymd\THis\Z';
 

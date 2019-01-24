@@ -34,13 +34,13 @@ class LineBag {
 	 */
 	protected function limitLine(string $line): string {
 		$count = strlen($line);
-		if ($count < static::LINE_LIMIT) {
+		if ($count <= static::LINE_LIMIT) {
 			return $line;
 		}
 		$body = substr($line, 0, static::LINE_LIMIT) . static::LINE_BREAK;
 		for ($x = static::LINE_LIMIT; $x < $count; $x += static::LINE_LIMIT - 1) {
 			$body .= ' ' . substr($line, $x, static::LINE_LIMIT - 1) . static::LINE_BREAK;
 		}
-		return $body;
+		return rtrim($body, static::LINE_BREAK);
 	}
 }

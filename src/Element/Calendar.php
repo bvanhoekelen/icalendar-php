@@ -1,30 +1,30 @@
 <?php namespace Calendar\Element;
 
 use Calendar\Bag\LineBag;
-use Calendar\Type\Property;
+use Calendar\Holder\PropertyHolder;
 
 class Calendar extends Element {
 	protected $debugMode = false;
 	protected $eventList;
 
 	// Property
-	const PROPERTY_PRODID = 'PRODID';
-	const PROPERTY_VERSION = 'VERSION';
-	const PROPERTY_CALSCALE = 'CALSCALE';
-	const PROPERTY_METHOD = 'METHOD';
-	const PROPERTY_NAME = 'NAME';
-	const PROPERTY_DESCRIPTION = 'DESCRIPTION';
-	const PROPERTY_REFRESH_INTERVAL = 'REFRESH-INTERVAL';
+	const PRODID = 'PRODID';
+	const VERSION = 'VERSION';
+	const CALSCALE = 'CALSCALE';
+	const METHOD = 'METHOD';
+	const NAME = 'NAME';
+	const DESCRIPTION = 'DESCRIPTION';
+	const REFRESH_INTERVAL = 'REFRESH-INTERVAL';
 
 	// X property
-	const PROPERTY_X_MICROSOFT_CALSCALE = 'X-MICROSOFT-CALSCALE';
-	const PROPERTY_X_APPLE_CALENDAR_COLOR = 'X-APPLE-CALENDAR-COLOR';
-	const PROPERTY_X_OUTLOOK_COLOR = 'X-OUTLOOK-COLOR';
-	const PROPERTY_X_FUNAMBOL_COLOR = 'X-FUNAMBOL-COLOR';
-	const PROPERTY_X_WR_CALNAME = 'X-WR-CALNAME';
-	const PROPERTY_X_WR_CALDESC = 'X-WR-CALDESC';
-	const PROPERTY_X_WR_RELCALID = 'X-WR-RELCALID';
-	const PROPERTY_X_PUBLISHED_TTL = 'X-PUBLISHED-TTL';
+	const X_MICROSOFT_CALSCALE = 'X-MICROSOFT-CALSCALE';
+	const X_APPLE_CALENDAR_COLOR = 'X-APPLE-CALENDAR-COLOR';
+	const X_OUTLOOK_COLOR = 'X-OUTLOOK-COLOR';
+	const X_FUNAMBOL_COLOR = 'X-FUNAMBOL-COLOR';
+	const X_WR_CALNAME = 'X-WR-CALNAME';
+	const X_WR_CALDESC = 'X-WR-CALDESC';
+	const X_WR_RELCALID = 'X-WR-RELCALID';
+	const X_PUBLISHED_TTL = 'X-PUBLISHED-TTL';
 
 	// Method
 	const METHOD_REQUEST = 'REQUEST';
@@ -46,53 +46,53 @@ class Calendar extends Element {
 	}
 
 	public function setProductId(string $value): self {
-		$this->property->set(static::PROPERTY_PRODID, $value);
+		$this->property->set(static::PRODID, $value);
 		return $this;
 	}
 
 	public function setVersion(string $value): self {
-		$this->property->set(static::PROPERTY_VERSION, $value);
+		$this->property->set(static::VERSION, $value);
 		return $this;
 	}
 
 	public function setCalscale(string $value): self {
-		$this->property->set(static::PROPERTY_CALSCALE, $value);
-		$this->property->set(static::PROPERTY_X_MICROSOFT_CALSCALE, $value);
+		$this->property->set(static::CALSCALE, $value);
+		$this->property->set(static::X_MICROSOFT_CALSCALE, $value);
 		return $this;
 	}
 
 	public function setMethod(string $value): self {
-		$this->property->set(static::PROPERTY_METHOD, $value);
+		$this->property->set(static::METHOD, $value);
 		return $this;
 	}
 
 	public function setColor(string $value): self {
-		$this->property->set(static::PROPERTY_X_APPLE_CALENDAR_COLOR, $value);
-		$this->property->set(static::PROPERTY_X_OUTLOOK_COLOR, $value);
-		$this->property->set(static::PROPERTY_X_FUNAMBOL_COLOR, $value);
+		$this->property->set(static::X_APPLE_CALENDAR_COLOR, $value);
+		$this->property->set(static::X_OUTLOOK_COLOR, $value);
+		$this->property->set(static::X_FUNAMBOL_COLOR, $value);
 		return $this;
 	}
 
 	public function setName(string $value): self {
-		$this->property->set(static::PROPERTY_NAME, $value);
-		$this->property->set(static::PROPERTY_X_WR_CALNAME, $value);
+		$this->property->set(static::NAME, $value);
+		$this->property->set(static::X_WR_CALNAME, $value);
 		return $this;
 	}
 
 	public function setDescription(string $value): self {
-		$this->property->set(static::PROPERTY_DESCRIPTION, $value);
-		$this->property->set(static::PROPERTY_X_WR_CALDESC, $value);
+		$this->property->set(static::DESCRIPTION, $value);
+		$this->property->set(static::X_WR_CALDESC, $value);
 		return $this;
 	}
 
 	public function setId(string $value): self {
-		$this->property->set(static::PROPERTY_X_WR_RELCALID, $value);
+		$this->property->set(static::X_WR_RELCALID, $value);
 		return $this;
 	}
 
 	public function setRefreshInterval(string $value): self {
 		$this->property->set(static::METHOD_REFRESH, ['VALUE' => 'DURATION:' . $value]);
-		$this->property->set(static::PROPERTY_X_PUBLISHED_TTL, $value);
+		$this->property->set(static::X_PUBLISHED_TTL, $value);
 		return $this;
 	}
 
@@ -119,7 +119,7 @@ class Calendar extends Element {
 
 	// Build
 	public function __construct() {
-		$this->property = new Property();
+		$this->property = new PropertyHolder();
 		$this->property->setStartAndEnd('VCALENDAR');
 		$this->eventList = [];
 		$this->setDefault();
@@ -139,9 +139,9 @@ class Calendar extends Element {
 		}
 	}
 
-	public function serve() {
+	public function serve(): string {
 		$this->setHeader();
-		echo $this->render();
+		return $this->render();
 	}
 
 }

@@ -1,7 +1,8 @@
 <?php namespace Calendar\Type;
 
-class RepeatingRuleType {
+use Calendar\Element\Event;
 
+class RepeatingRule {
 	protected $frequency;
 	protected $count;
 	protected $until;
@@ -69,8 +70,9 @@ class RepeatingRuleType {
 	const BYSETPOS_FOURTH = 4;
 	const BYSETPOS_LAST = -1;
 
-	public function __construct(array $rules = []) {
+	public function __construct($frequency = null, array $rules = []) {
 		$this->rules = $rules;
+		$this->frequency = $frequency;
 	}
 
 	public function setRuleUntilCount($frequency, $count, $interval = 1): void {
@@ -131,11 +133,12 @@ class RepeatingRuleType {
 		return $this;
 	}
 
-	public function getRules(): array {
-		$rules = $this->rules;
-		if ($this->frequency) {
-			$rules[static::FREQ] = $this->frequency;
+	public function getProperty(): Property {
+		// Check Frequencies
+		if (!$this->frequency) {
+			throw new \InvalidArgumentException("missing frequency by repeating rule");
 		}
+		$rules = $this->rules;
 		if ($this->byDay) {
 			$rules[static::BYDAY] = $this->byDay;
 		}
@@ -152,12 +155,12 @@ class RepeatingRuleType {
 			$rules[static::COUNT] = $this->count;
 		}
 		if ($this->until) {
-			$dateTimeType = new DateTimeType($this->until);
+			$dateTimeType = new DateTime($this->until);
 			$rules[static::UNTIL] = $dateTimeType->render();
 		}
 		if ($this->interval) {
 			$rules[static::INTERVAL] = $this->interval;
 		}
-		return $rules;
+		return new Property(Event::RRULE, [static::FREQ => $this->frequency], $rules);
 	}
 }

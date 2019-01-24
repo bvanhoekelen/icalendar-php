@@ -1,64 +1,75 @@
 <?php namespace Calendar\Element;
 
 use Calendar\Bag\LineBag;
-use Calendar\Type\DateTimeType;
-use Calendar\Type\Property;
-use Calendar\Type\RepeatingRuleType;
+use Calendar\Type\Attendee;
+use Calendar\Type\DateTime;
+use Calendar\Holder\PropertyHolder;
+use Calendar\Type\Geo;
+use Calendar\Type\RepeatingRule;
 
-class Event {
-	protected $property;
-
-	const PROPERTY_UID = 'UID';
-	const PROPERTY_DTSTART = 'DTSTART';
-	const PROPERTY_DTEND = 'DTEND';
-	const PROPERTY_CREATED = 'CREATED';
-	const PROPERTY_LAST_MODIFIED = 'LAST-MODIFIED';
+class Event extends Element {
+	const UID = 'UID';
+	const DTSTART = 'DTSTART';
+	const DTEND = 'DTEND';
+	const CREATED = 'CREATED';
+	const LAST_MODIFIED = 'LAST-MODIFIED';
+	const DTSTAMP = 'DTSTAMP';
 
 	// Repeat
-	const PROPERTY_RRULE = 'RRULE';
-//	const PROPERTY_DTSTAMP = 'DTSTAMP';
+	const RRULE = 'RRULE';
 //	const PROPERTY_EXDATE = 'EXDATE';
 
-	const PROPERTY_SEQUENCE = 'SEQUENCE';
-	const PROPERTY_TRANSP = 'TRANSP';
-	const PROPERTY_CLASS = 'CLASS';
+	const SEQUENCE = 'SEQUENCE';
+	const TRANSP = 'TRANSP';
+	const P_CLASS = 'CLASS';
 
-	const PROPERTY_STATUS = 'STATUS';
-	const PROPERTY_ORGANIZER = 'ORGANIZER';
-	const PROPERTY_ATTENDEE = 'ATTENDEE';
+	const STATUS = 'STATUS';
+	const ORGANIZER = 'ORGANIZER';
+	const ATTENDEE = 'ATTENDEE'; //
 
-	const PROPERTY_PRIORITY = 'PRIORITY';
-	const PROPERTY_SUMMARY = 'SUMMARY';
-	const PROPERTY_DESCRIPTION = 'DESCRIPTION';
-	const PROPERTY_CATEGORIES = 'CATEGORIES';
-	const PROPERTY_URL = 'URL';
+	const PRIORITY = 'PRIORITY';
+	const SUMMARY = 'SUMMARY';
+	const DESCRIPTION = 'DESCRIPTION';
+	const CATEGORIES = 'CATEGORIES';
+	const URL = 'URL';
 
-	const PROPERTY_LOCATION = 'LOCATION';
-	const PROPERTY_GEO = 'GEO';
+	const LOCATION = 'LOCATION';
+	const GEO = 'GEO';
 
 	// Property X
-	const PROPERTY_X_APPLE_TRAVEL_ADVISORY_BEHAVIOR = 'X-APPLE-TRAVEL-ADVISORY-BEHAVIOR';
-	const PROPERTY_X_APPLE_STRUCTURED_LOCATION = 'X-APPLE-STRUCTURED-LOCATION';
+	const X_APPLE_TRAVEL_ADVISORY_BEHAVIOR = 'X-APPLE-TRAVEL-ADVISORY-BEHAVIOR';
+	const X_APPLE_STRUCTURED_LOCATION = 'X-APPLE-STRUCTURED-LOCATION';
+	// X-APPLE-TRAVEL-DURATION;VALUE=DURATION:PT15M
 
 	// Transparency
-	const TIME_TRANSP_OPAQUE = 'OPAQUE';
-	const TIME_TRANSP_TRANSPARENT = 'TRANSPARENT';
+	const TRANSP_OPAQUE = 'OPAQUE';
+	const TRANSP_TRANSPARENT = 'TRANSPARENT';
+
+	// Class
+	const CLASS_PUBLIC = "PUBLIC";
+	const CLASS_PRIVATE = "PRIVATE";
+	const CLASS_CONFIDENTIAL = "CONFIDENTIAL";
 
 	// Status
 	const STATUS_TENTATIVE = 'TENTATIVE';
 	const STATUS_CONFIRMED = 'CONFIRMED';
 	const STATUS_CANCELLED = 'CANCELLED';
 
+	// SENT-BY
+	const ORGANIZER_CN = 'CN';
+	const ORGANIZER_SENT_BY = 'SENT-BY';
+
 	// Date options
 	protected $noTime;
 	protected $dateCustomLayout;
 
-	// More
+	// Wizard
 	protected $repeat;
+	protected $attendee = [];
 
 	// Options
 	public function setUid(string $value): self {
-		$this->property->set(static::PROPERTY_UID, $value);
+		$this->property->set(static::UID, $value);
 		return $this;
 	}
 
@@ -73,8 +84,8 @@ class Event {
 	}
 
 	public function setDtStart(\DateTime $dateTime): self {
-		$dateTimeType = new DateTimeType($dateTime, $this->noTime, $this->dateCustomLayout);
-		$this->property->set(static::PROPERTY_DTSTART, $dateTimeType->render());
+		$dateTimeType = new DateTime($dateTime, $this->noTime, $this->dateCustomLayout);
+		$this->property->set(static::DTSTART, $dateTimeType->render());
 		return $this;
 	}
 
@@ -83,8 +94,8 @@ class Event {
 	}
 
 	public function setDtEnd(\DateTime $dateTime): self {
-		$dateTimeType = new DateTimeType($dateTime, $this->noTime, $this->dateCustomLayout);
-		$this->property->set(static::PROPERTY_DTEND, $dateTimeType->render());
+		$dateTimeType = new DateTime($dateTime, $this->noTime, $this->dateCustomLayout);
+		$this->property->set(static::DTEND, $dateTimeType->render());
 		return $this;
 	}
 
@@ -92,82 +103,155 @@ class Event {
 		return $this->setDtEnd($dateTime);
 	}
 
-	public function setLastModified(\DateTime $dateTime): self {
-		$dateTimeType = new DateTimeType($dateTime);
-		$this->property->set(static::PROPERTY_LAST_MODIFIED, $dateTimeType->render());
-		return $this;
-	}
-
 	public function setCreated(\DateTime $dateTime): self {
-		$dateTimeType = new DateTimeType($dateTime);
-		$this->property->set(static::PROPERTY_CREATED, $dateTimeType->render());
+		$dateTimeType = new DateTime($dateTime);
+		$this->property->set(static::CREATED, $dateTimeType->render());
 		return $this;
 	}
 
-	public function setRRule($value): self {
-		$this->property->set(static::PROPERTY_RRULE, $value);
+	public function setLastModified(\DateTime $dateTime): self {
+		$dateTimeType = new DateTime($dateTime);
+		$this->property->set(static::LAST_MODIFIED, $dateTimeType->render());
 		return $this;
 	}
 
-	public function repeat(): RepeatingRuleType {
-		if ($this->repeat) {
-			return $this->repeat;
-		}
-		$this->repeat = new RepeatingRuleType();
+	public function setDtStamp(\DateTime $dateTime): self {
+		$dateTimeType = new DateTime($dateTime);
+		$this->property->set(static::DTSTAMP, $dateTimeType->render());
+		return $this;
+	}
+
+	public function setRRule($mixed): self {
+		$this->property->set(static::RRULE, $mixed);
+		return $this;
+	}
+
+	public function repeat($frequency = null, array $rules = []): RepeatingRule {
+		$this->repeat = new RepeatingRule($frequency, $rules);
 		return $this->repeat;
 	}
 
+	public function setRepeatObject(RepeatingRule $repeatingRuleType): self {
+		$this->repeat = $repeatingRuleType;
+		return $this;
+	}
+
 	public function setSequence(int $int): self {
-		$this->property->set(static::PROPERTY_SEQUENCE, $int);
+		$this->property->set(static::SEQUENCE, $int);
 		return $this;
 	}
 
 	public function setTransp(string $value): self {
-		$this->property->set(static::TIME_TRANSP_TRANSPARENT, $value);
+		$this->property->set(static::TRANSP, $value);
 		return $this;
 	}
 
 	public function setClass(string $value): self {
-		$this->property->set(static::PROPERTY_CLASS, $value);
+		$this->property->set(static::P_CLASS, $value);
 		return $this;
 	}
 
 	public function setStatus(string $value): self {
-		$this->property->set(static::PROPERTY_STATUS, $value);
+		$this->property->set(static::STATUS, $value);
 		return $this;
 	}
 
-	public function setOrganizer(string $value): self {
-		$this->property->set(static::PROPERTY_ORGANIZER, $value);
+	public function setOrganizer(array $params): self {
+		$this->property->set(static::ORGANIZER, null, $params);
 		return $this;
 	}
 
 	public function setOrganizerWizard(string $name, string $email): self {
-		$this->property->set(static::PROPERTY_ORGANIZER, ['CN' => $name . ':MAILTO:' . $email, 'G' => $email,]);
+		$this->property->set(static::ORGANIZER, null, ['CN' => $name . ':MAILTO:' . $email]);
+		return $this;
+	}
+
+	public function attendee(int $number = null): Attendee {
+		if (!is_int($number)) {
+			$number = count($this->attendee);
+		}
+
+		$this->attendee[$number] = new Attendee();
+		return $this->attendee[$number];
+	}
+
+	public function setPriority(int $priority): self {
+		$this->property->set(static::PRIORITY, $priority);
+		return $this;
+	}
+
+	public function setSummery(string $summery): self {
+		$this->property->set(static::SUMMARY, $summery);
+		return $this;
+	}
+
+	public function setDescription(string $description): self {
+		$this->property->set(static::DESCRIPTION, $description);
+		return $this;
+	}
+
+	public function setCategories(array $categories): self {
+		$this->property->set(static::DESCRIPTION, implode(",", $categories));
+		return $this;
+	}
+
+	public function setUrl(string $url): self {
+		$this->property->set(static::URL, $url);
+		return $this;
+	}
+
+	// Location
+	public function setLocation(string $location): self {
+		$this->property->set(static::LOCATION, $location);
+		return $this;
+	}
+
+	public function setGeo(Geo $geo): self {
+		$this->property->set(static::GEO, $geo->latitude . ";" . $geo->longitude);
+		return $this;
+	}
+
+	public function setLocationWizard($title, $location, Geo $geo = null): self {
+		$this->setLocation($location);
+		$geoApple = "";
+		if (!is_null($geo)) {
+			$this->setGeo($geo);
+			$geoApple = ":geo:" . $geo->latitude . "," . $geo->longitude;
+		}
+		$this->property->set(static::X_APPLE_STRUCTURED_LOCATION, null, ["VALUE" => "URI", "X-ADDRESS" => $location, "X-APPLE-RADIUS" => 50, "X-TITLE" => $title . $geoApple,]);
+
 		return $this;
 	}
 
 	// Build
 	public function __construct() {
-		$this->property = new Property();
+		$this->property = new PropertyHolder();
 		$this->property->setStartAndEnd('VEVENT');
+		$this->setDefault();
 	}
 
-	protected function prepareUid() {
-		if (!$this->property->get(self::PROPERTY_UID)) {
-			$this->setUid(md5(random_bytes(20)));
-		}
+	public function setDefault() {
+		$this->setUid(md5(random_bytes(20)));
+		$this->setDtStamp(new \DateTime('now'));
 	}
 
 	protected function prepareRepeat() {
 		if ($this->repeat) {
-			$this->setRRule($this->repeat->getRules());
+			$this->property->setProperty($this->repeat->getProperty());
+		}
+	}
+
+	protected function prepareAttendee() {
+		if (count($this->attendee)) {
+			foreach ($this->attendee as $key => $attendee) {
+				$this->property->set(self::ATTENDEE, null, $attendee->getRules(), false);
+			}
 		}
 	}
 
 	public function build(LineBag $lineBag) {
-		$this->prepareUid();
 		$this->prepareRepeat();
+		$this->prepareAttendee();
 		$this->property->buildStartLine($lineBag);
 		$this->property->build($lineBag);
 		$this->property->buildEndLine($lineBag);

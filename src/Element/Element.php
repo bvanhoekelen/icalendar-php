@@ -1,14 +1,14 @@
 <?php namespace Calendar\Element;
 
 use Calendar\Bag\LineBag;
-use Calendar\Type\Property;
+use Calendar\Holder\PropertyHolder;
 
 abstract class Element {
 	protected $property;
 
 	abstract public function build(LineBag $lineBag);
 
-	public function property(): Property {
+	public function property(): PropertyHolder {
 		return $this->property;
 	}
 

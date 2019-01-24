@@ -4,7 +4,7 @@ require_once('../vendor/autoload.php');
 
 use Calendar\Element\Calendar;
 use Calendar\Element\Event;
-use Calendar\Type\RepeatingRuleType;
+use Calendar\Type\RepeatingRule;
 
 $calender = (new Calendar())
 	->setDebugMode(true)
@@ -16,12 +16,11 @@ $calender = (new Calendar())
 	->setName('Custom name')
 	->setDescription('Custom description')
 	->setId('Custom id')
-	->setRefreshInterval('P1H');
+	->setRefreshInterval('P1H')
+;
 
 // Add custom not existed element
-$calender->property()->set('NOT-EXISTED-ELEMENT-A', 'Test');
-$calender->property()->set('NOT-EXISTED-ELEMENT-B', ['CN' => 'A', 'CN' => 'A:B', 'B']);
-$calender->property()->set('NOT-EXISTED-ELEMENT-C', ['CN' => ['A','B']]);
+$calender->property()->set('NOT-EXISTED-ELEMENT-FOR-CALENDAR', ['A' => 'A1'], ['B' => 'B1:B2', 'C' => [1,2,3]]);
 
 // Add event
 $event = (new Event())
@@ -30,21 +29,50 @@ $event = (new Event())
 	->setDtStart(new DateTime('now'))
 	->setDtEnd(new DateTime('+1 day'))
 	->setCreated(new DateTime('-1 day'))
-	->setLastModified(new DateTime('-1 day'));
+	->setLastModified(new DateTime('-1 day'))
+	->setSequence(1)
+	->setTransp(Event::TRANSP_OPAQUE)
+	->setClass(Event::CLASS_PUBLIC)
+	->setStatus(Event::STATUS_CONFIRMED)
+	->setPriority(1)
+	->setSummery("short summary of the event")
+	->setDescription("full description of the event")
+	->setCategories(["Ical", "Simple"])
+	->setUrl("https://www.google.nl")
+	->setGeo(new \Calendar\Type\Geo(52.373149,4.891342))
+	->setLocationWizard(
+		"Koninklijk Paleis Amsterdam",
+		"Koninklijk Paleis Amsterdam, Nieuwezijds Voorburgwal 147, 1012 RJ Amsterdam, Nederland",
+		new \Calendar\Type\Geo(52.373149,4.891342 )
+	)
+;
+
+// Custom
+$event->property()->set('NOT-EXISTED-ELEMENT-FOR-EVENT', ['A' => 'A1'], ['B' => 'B1:B2', 'C' => [1,2,3]]);
 
 // Repeating
-$event->repeat()->setRuleUntilCount(RepeatingRuleType::FREQ_DAILY, 10, 2);
-
-// Status
-$event->setStatus(Event::STATUS_CONFIRMED);
+//$event->repeat()->setRuleUntilCount(RepeatingRuleType::FREQ_DAILY, 10, 2);
+$event->repeat()
+	->setFrequency(RepeatingRule::FREQ_YEARLY)
+	->setByDay([
+		RepeatingRule::BYDAY_MO,
+		RepeatingRule::BYDAY_FR,
+	])
+	->setBySetPos(RepeatingRule::BYSETPOS_LAST)
+	->setByMonth(RepeatingRule::BYMONTH_NOV)
+	->setUntil(new \DateTime('+4 weeks'));
 
 // Organizer
-//$event->setOrganizer('');
+//$event->setOrganizer(['CN' => 'Bart:MAILTO:bart@gmail.nl']);
 $event->setOrganizerWizard('Bart','bart@gmail.nl');
 
+// Attendee
+$event->attendee()->wizard(\Calendar\Type\Attendee::PARTSTAT_ACCEPTED, "Bart", "bart@gmail.com");
+$event->attendee()->wizard(\Calendar\Type\Attendee::PARTSTAT_NEEDS_ACTION, "Lisa", "lisa@gmail.com");
 
+// Set event
 $calender->setEvent($event);
 
-//$calender->serve();
-echo $calender->render();
-//dd($calender, $calender->render());
+// Render
+//echo $calender->render(); // Render to string
+echo $calender->serve(); // Render to string with headers
