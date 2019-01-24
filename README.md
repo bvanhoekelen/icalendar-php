@@ -54,7 +54,7 @@ $calender->setEvent($event);
 echo $calender->serve(); // Render to string with headers
 
 ```
-[See more examples](https://github.com/bvanhoekelen/icalendar-php/examples).
+[See more examples](https://github.com/bvanhoekelen/icalendar-php/tree/master/examples).
 
 # Help, docs and links
 - [Packagist](https://packagist.org/packages/bvanhoekelen/icalendar-php)
