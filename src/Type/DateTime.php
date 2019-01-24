@@ -6,16 +6,16 @@ class DateTime {
 
 	protected $dateTime;
 	protected $customLayout;
-	protected $noTime;
+	protected $wholeDay;
 
-	public function __construct(\DateTime $dateTime, $noTime = null, $customLayout = false) {
+	public function __construct(\DateTime $dateTime, $wholeDay = false, $customLayout = false) {
 		$this->dateTime = $dateTime;
 		$this->customLayout = $customLayout;
-		$this->noTime = $noTime;
+		$this->wholeDay = $wholeDay;
 	}
 
 	public function render(): string {
-		if ($this->noTime) {
+		if ($this->wholeDay) {
 			return $this->dateTime->format(static::LAYOUT_DATE);
 		}
 		if ($this->customLayout) {

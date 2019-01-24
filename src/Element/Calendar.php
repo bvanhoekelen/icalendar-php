@@ -110,19 +110,21 @@ class Calendar extends Element {
 
 	// Default
 	public function setDefault(): self {
-		$this->setProductId('-//iCalendar tool//github.com/bvanhoekelen/icalendar-php 1.0.0//EN');
 		$this->setVersion('2.0');
+		$this->setProductId('-//iCalendar tool//github.com/bvanhoekelen/icalendar-php 1.0.0//EN');
 		$this->setCalscale(static::CALSCALE_GREGORIAN);
 		$this->setMethod(static::METHOD_PUBLISH);
 		return $this;
 	}
 
 	// Build
-	public function __construct() {
+	public function __construct($setDefault = true) {
 		$this->property = new PropertyHolder();
 		$this->property->setStartAndEnd('VCALENDAR');
 		$this->eventList = [];
-		$this->setDefault();
+		if($setDefault){
+			$this->setDefault();
+		}
 	}
 
 	public function build(LineBag $lineBag): LineBag {

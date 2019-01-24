@@ -11,9 +11,9 @@ class Event extends Element {
 	const UID = 'UID';
 	const DTSTART = 'DTSTART';
 	const DTEND = 'DTEND';
-	const CREATED = 'CREATED';
-	const LAST_MODIFIED = 'LAST-MODIFIED';
 	const DTSTAMP = 'DTSTAMP';
+//	const CREATED = 'CREATED'; // FOR APPLICATION DATABASE
+//	const LAST_MODIFIED = 'LAST-MODIFIED'; // FOR APPLICATION DATABASE
 
 	// Repeat
 	const RRULE = 'RRULE';
@@ -60,7 +60,7 @@ class Event extends Element {
 	const ORGANIZER_SENT_BY = 'SENT-BY';
 
 	// Date options
-	protected $noTime;
+	protected $wholeDay;
 	protected $dateCustomLayout;
 
 	// Wizard
@@ -73,8 +73,8 @@ class Event extends Element {
 		return $this;
 	}
 
-	public function setNoTime(): self {
-		$this->noTime = true;
+	public function setWholeDay(): self {
+		$this->wholeDay = true;
 		return $this;
 	}
 
@@ -84,7 +84,7 @@ class Event extends Element {
 	}
 
 	public function setDtStart(\DateTime $dateTime): self {
-		$dateTimeType = new DateTime($dateTime, $this->noTime, $this->dateCustomLayout);
+		$dateTimeType = new DateTime($dateTime, $this->wholeDay, $this->dateCustomLayout);
 		$this->property->set(static::DTSTART, $dateTimeType->render());
 		return $this;
 	}
@@ -94,25 +94,13 @@ class Event extends Element {
 	}
 
 	public function setDtEnd(\DateTime $dateTime): self {
-		$dateTimeType = new DateTime($dateTime, $this->noTime, $this->dateCustomLayout);
+		$dateTimeType = new DateTime($dateTime, $this->wholeDay, $this->dateCustomLayout);
 		$this->property->set(static::DTEND, $dateTimeType->render());
 		return $this;
 	}
 
 	public function setEnd(\DateTime $dateTime): self {
 		return $this->setDtEnd($dateTime);
-	}
-
-	public function setCreated(\DateTime $dateTime): self {
-		$dateTimeType = new DateTime($dateTime);
-		$this->property->set(static::CREATED, $dateTimeType->render());
-		return $this;
-	}
-
-	public function setLastModified(\DateTime $dateTime): self {
-		$dateTimeType = new DateTime($dateTime);
-		$this->property->set(static::LAST_MODIFIED, $dateTimeType->render());
-		return $this;
 	}
 
 	public function setDtStamp(\DateTime $dateTime): self {
@@ -224,15 +212,19 @@ class Event extends Element {
 	}
 
 	// Build
-	public function __construct() {
+	public function __construct($setDefault = true) {
 		$this->property = new PropertyHolder();
 		$this->property->setStartAndEnd('VEVENT');
-		$this->setDefault();
+		if ($setDefault) {
+			$this->setDefault();
+		}
 	}
 
 	public function setDefault() {
 		$this->setUid(md5(random_bytes(20)));
 		$this->setDtStamp(new \DateTime('now'));
+		$this->setSequence(0);
+		$this->setTransp(self::TRANSP_TRANSPARENT);
 	}
 
 	protected function prepareRepeat() {
