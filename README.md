@@ -58,8 +58,3 @@ echo $calender->serve(); // Render to string with headers
 
 # Help, docs and links
 - [Packagist](https://packagist.org/packages/bvanhoekelen/icalendar-php)
-
-## Backlog & Feedback
-If you have any suggestions to improve this performance tool? Please add your feature, bug or improvement to the [BACKLOG.dm](https://github.com/bvanhoekelen/icalendar-php/blob/master/BACKLOG.md). Or create a [issues](https://github.com/bvanhoekelen/icalendar-php/issues).
-- [Open backlog](https://github.com/bvanhoekelen/icalendar-php/blob/master/BACKLOG.md)
-- [Create issues](https://github.com/bvanhoekelen/icalendar-php/issues)
