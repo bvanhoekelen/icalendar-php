@@ -4,8 +4,6 @@
 [![GitHub release](https://img.shields.io/github/release/bvanhoekelen/icalendar-php.svg?style=flat-square)](https://github.com/bvanhoekelen/icalendar-php/releases)
 [![Packagist](https://img.shields.io/packagist/dt/bvanhoekelen/icalendar-php.svg?style=flat-square)](https://packagist.org/packages/bvanhoekelen/icalendar-php)
 [![Github issues](https://img.shields.io/github/issues/bvanhoekelen/icalendar-php.svg?style=flat-square)](https://github.com/bvanhoekelen/icalendar-php/issues)
-[![Travis branch](https://img.shields.io/travis/bvanhoekelen/icalendar-php/master.svg?style=flat-square)](https://travis-ci.org/bvanhoekelen/icalendar-php)
-[![Travis branch](https://img.shields.io/travis/bvanhoekelen/icalendar-php/develop.svg?style=flat-square)](https://travis-ci.org/bvanhoekelen/icalendar-php) Build: Master|Develop
 ```
 composer require bvanhoekelen/icalendar-php
 ```
