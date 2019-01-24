@@ -168,7 +168,7 @@ class Event extends Element {
 		return $this;
 	}
 
-	public function setSummery(string $summery): self {
+	public function setSummary(string $summery): self {
 		$this->property->set(static::SUMMARY, $summery);
 		return $this;
 	}

@@ -70,7 +70,7 @@ class PropertyHolder {
 		}
 
 		// Params
-		if (count($item->params) != 0) {
+		if (is_array($item->params)) {
 			$lines = [];
 			foreach ($item->params as $key => $value) {
 				if (is_array($value)) {

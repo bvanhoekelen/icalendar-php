@@ -7,7 +7,6 @@ use Calendar\Element\Event;
 use Calendar\Type\RepeatingRule;
 
 $calender = (new Calendar())
-	->setMethod(Calendar::METHOD_PUBLISH)
 	->setColor('#00A677')
 	->setName('Custom name')
 	->setDescription('Custom description')
@@ -30,7 +29,7 @@ $event = (new Event())
 	->setClass(Event::CLASS_PUBLIC)
 	->setStatus(Event::STATUS_CONFIRMED)
 	->setPriority(0)
-	->setSummery("short summary of the event")
+	->setSummary("short summary of the event")
 	->setDescription("full description of the event")
 	->setCategories(["Ical", "Simple"])
 	->setUrl("https://www.google.nl")
