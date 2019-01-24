@@ -3,7 +3,9 @@
 class Attendee {
 	protected $rol;
 	protected $partstat;
+	protected $rsvp;
 	protected $cn;
+	protected $cuTupe;
 
 	protected $rules;
 
@@ -49,6 +51,7 @@ class Attendee {
 		$this->setPartStat($partStat);
 		$this->rules[self::X_NUM_GUESTS] = 0;
 		$this->setCnWizard($cn, $email);
+		$this->setRsvp(true);
 
 		return $this;
 	}
@@ -60,6 +63,11 @@ class Attendee {
 
 	public function setRol(string $rol): self {
 		$this->rol = $rol;
+		return $this;
+	}
+
+	public function setRsvp(bool $rsvp): self {
+		$this->rsvp = $rsvp;
 		return $this;
 	}
 

@@ -39,7 +39,7 @@ class Event extends Element {
 	// Property X
 	const X_APPLE_TRAVEL_ADVISORY_BEHAVIOR = 'X-APPLE-TRAVEL-ADVISORY-BEHAVIOR';
 	const X_APPLE_STRUCTURED_LOCATION = 'X-APPLE-STRUCTURED-LOCATION';
-	// X-APPLE-TRAVEL-DURATION;VALUE=DURATION:PT15M
+	const X_APPLE_TRAVEL_DURATION = 'X-APPLE-TRAVEL-DURATION';
 
 	// Transparency
 	const TRANSP_OPAQUE = 'OPAQUE';
@@ -199,6 +199,11 @@ class Event extends Element {
 		return $this;
 	}
 
+	public function setTravelDuration(string $duration): self {
+		$this->property->set(static::X_APPLE_TRAVEL_DURATION, null, ["VALUE" => "DURATION:" . $duration]); // PT15M
+		return $this;
+	}
+
 	public function setLocationWizard($title, $location, Geo $geo = null): self {
 		$this->setLocation($location);
 		$geoApple = "";
@@ -206,7 +211,12 @@ class Event extends Element {
 			$this->setGeo($geo);
 			$geoApple = ":geo:" . $geo->latitude . "," . $geo->longitude;
 		}
-		$this->property->set(static::X_APPLE_STRUCTURED_LOCATION, null, ["VALUE" => "URI", "X-ADDRESS" => $location, "X-APPLE-RADIUS" => 50, "X-TITLE" => $title . $geoApple,]);
+		$this->property->set(static::X_APPLE_STRUCTURED_LOCATION, null, [
+			"VALUE" => "URI",
+			"X-ADDRESS" => $location,
+			"X-APPLE-RADIUS" => 50,
+			"X-TITLE" => '"' .$title . '"'. $geoApple,
+		]);
 
 		return $this;
 	}
