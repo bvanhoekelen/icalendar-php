@@ -54,7 +54,7 @@ $calender->newEvent()
 	->setAttendee((new Attendee())
 		->wizard(Attendee::PARTSTAT_ACCEPTED, 'Henk', 'exemple2@gmail.com')
 	)
-	// Repeat
+	// Add repeat
 	->setRepeatRule((new RepeatRule(RepeatRule::FREQ_YEARLY))
 		->setByDay(RepeatRule::BYDAY_TH)
 		->setBySetPos(RepeatRule::BYSETPOS_FIRST)
