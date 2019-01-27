@@ -65,7 +65,7 @@ class PropertyHolder {
 			}
 			$line .= ":" . implode(';', $lines);
 		}
-		elseif ($item->value) {
+		elseif (!is_null($item->value)) {
 			$line .= ":" . $item->value;
 		}
 
