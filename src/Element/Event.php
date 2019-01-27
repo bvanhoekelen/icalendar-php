@@ -6,7 +6,8 @@ use Calendar\Type\DateTime;
 use Calendar\Holder\PropertyHolder;
 use Calendar\Type\Geo;
 use Calendar\Type\Location;
-use Calendar\Type\RepeatingRule;
+use Calendar\Type\Property;
+use Calendar\Type\RepeatRule;
 use Prophecy\Exception\InvalidArgumentException;
 
 class Event extends Element {
@@ -66,7 +67,6 @@ class Event extends Element {
 	protected $dateCustomLayout;
 
 	// Wizard
-	protected $repeat;
 	protected $attendee = [];
 
 	// Options
@@ -112,16 +112,24 @@ class Event extends Element {
 	}
 
 	public function setRRule($mixed): self {
-		$this->property->set(static::RRULE, $mixed);
+		if($mixed instanceof RepeatRule){
+			$this->property->setProperty($mixed->getProperty());
+		}
+		elseif($mixed instanceof Property){
+			$this->property->setProperty($mixed);
+		}
+		else{
+			throw new InvalidArgumentException("param has to be a instance of RepeatRule or property");
+		}
 		return $this;
 	}
 
-	public function repeat($frequency = null, array $rules = []): RepeatingRule {
-		$this->repeat = new RepeatingRule($frequency, $rules);
-		return $this->repeat;
+	public function setRepeatRule(RepeatRule $repeatRule): self {
+		$this->setRRule($repeatRule);
+		return $this;
 	}
 
-	public function setRepeatObject(RepeatingRule $repeatingRuleType): self {
+	public function setRepeatObject(RepeatRule $repeatingRuleType): self {
 		$this->repeat = $repeatingRuleType;
 		return $this;
 	}
@@ -239,12 +247,6 @@ class Event extends Element {
 
 	}
 
-	protected function prepareRepeat() {
-		if ($this->repeat) {
-			$this->property->setProperty($this->repeat->getProperty());
-		}
-	}
-
 	protected function prepareAttendee() {
 		if (count($this->attendee)) {
 			foreach ($this->attendee as $key => $attendee) {
@@ -254,7 +256,6 @@ class Event extends Element {
 	}
 
 	public function build(LineBag $lineBag) {
-		$this->prepareRepeat();
 		$this->prepareAttendee();
 		$this->property->buildStartLine($lineBag);
 		$this->property->build($lineBag);

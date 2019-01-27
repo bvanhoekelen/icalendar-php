@@ -2,7 +2,7 @@
 
 use Calendar\Element\Event;
 
-class RepeatingRule {
+class RepeatRule {
 	protected $frequency;
 	protected $count;
 	protected $until;
@@ -70,9 +70,9 @@ class RepeatingRule {
 	const BYSETPOS_FOURTH = 4;
 	const BYSETPOS_LAST = -1;
 
-	public function __construct($frequency = null, array $rules = []) {
-		$this->rules = $rules;
+	public function __construct($frequency, array $rules = []) {
 		$this->frequency = $frequency;
+		$this->rules = $rules;
 	}
 
 	public function setRuleUntilCount($frequency, $count, $interval = 1): void {
