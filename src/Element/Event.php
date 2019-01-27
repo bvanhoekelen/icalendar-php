@@ -156,13 +156,12 @@ class Event extends Element {
 		return $this;
 	}
 
-	public function attendee(int $number = null): Attendee {
+	public function setAttendee(Attendee $attendee, $number = null): self {
 		if (!is_int($number)) {
 			$number = count($this->attendee);
 		}
-
-		$this->attendee[$number] = new Attendee();
-		return $this->attendee[$number];
+		$this->attendee[$number] = $attendee;
+		return $this;
 	}
 
 	public function setPriority(int $priority): self {
