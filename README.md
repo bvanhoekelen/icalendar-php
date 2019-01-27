@@ -44,7 +44,7 @@ $calender->newEvent()
 		->setCity('Amsterdam')
 		->setCountry('Nederland')
 		->setGeo(new Geo(52.373149,4.891342))
-	)
+	))
 	// Add organizer
 	->setOrganizerWizard('Bart', 'exemple@gmail.com')
 	// Add attended
@@ -61,7 +61,7 @@ $calender->newEvent()
 		->setByMonth(RepeatRule::BYMONTH_NOV)
 		->setCount(7)
 	)
-);
+;
 
 // Render to string with headers
 echo $calender->serve();
