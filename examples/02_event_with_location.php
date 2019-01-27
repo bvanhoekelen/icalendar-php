@@ -3,6 +3,8 @@
 require_once('../vendor/autoload.php');
 
 use Calendar\Element\Calendar;
+use Calendar\Type\Location;
+use Calendar\Type\Geo;
 
 $calender = (new Calendar())
 	->setColor('#00A677')
@@ -18,7 +20,17 @@ $calender->newEvent()
 	->setDtStamp(new DateTime('now'))
 	->setSummary('short summary of the event')
 	->setDescription('full description of the event')
-	->setUrl('https://www.google.nl');
+	->setUrl('https://www.google.nl')
+	// Add Location
+	->setLocationWizard(((new Location())
+		->setTitle('Koninklijk Paleis Amsterdam')
+		->setStreetAddress('Nieuwezijds Voorburgwal 147')
+		->setZipCode('1012 RJ')
+		->setCity('Amsterdam')
+		->setCountry('Nederland')
+		->setGeo(new Geo(52.373149,4.891342))
+	)
+);
 
 // Render to string with headers
 echo $calender->serve();
