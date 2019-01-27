@@ -29,8 +29,8 @@ $calender->newEvent()
 		->setCity('Amsterdam')
 		->setCountry('Nederland')
 		->setGeo(new Geo(52.373149,4.891342))
-	)
-);
+	))
+;
 
 // Render to string with headers
 echo $calender->serve();
