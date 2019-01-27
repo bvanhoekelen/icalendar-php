@@ -11,11 +11,15 @@ composer require bvanhoekelen/icalendar-php
 ## Highlight
 - Generate simpel ical sub
 
-## Simple example
+## Example
 ```php
 <?php
+
 require_once('../vendor/autoload.php');
+
 use Calendar\Element\Calendar;
+use Calendar\Type\Location;
+use Calendar\Type\Geo;
 
 $calender = (new Calendar())
 	->setColor('#00A677')
@@ -31,12 +35,39 @@ $calender->newEvent()
 	->setDtStamp(new DateTime('now'))
 	->setSummary('short summary of the event')
 	->setDescription('full description of the event')
-	->setUrl('https://www.google.nl');
+	->setUrl('https://www.google.nl')
+	// Add Location
+	->setLocationWizard(((new Location())
+		->setTitle('Koninklijk Paleis Amsterdam')
+		->setStreetAddress('Nieuwezijds Voorburgwal 147')
+		->setZipCode('1012 RJ')
+		->setCity('Amsterdam')
+		->setCountry('Nederland')
+		->setGeo(new Geo(52.373149,4.891342))
+	)
+	// Add organizer
+	->setOrganizerWizard('Bart', 'exemple@gmail.com')
+	// Add attended
+	->setAttendee((new Attendee())
+		->wizard(Attendee::PARTSTAT_ACCEPTED, 'Bart', 'exemple@gmail.com')
+	)
+	->setAttendee((new Attendee())
+		->wizard(Attendee::PARTSTAT_ACCEPTED, 'Henk', 'exemple2@gmail.com')
+	)
+	// Repeat
+	->setRepeatRule((new RepeatRule(RepeatRule::FREQ_YEARLY))
+		->setByDay(RepeatRule::BYDAY_TH)
+		->setBySetPos(RepeatRule::BYSETPOS_FIRST)
+		->setByMonth(RepeatRule::BYMONTH_NOV)
+		->setCount(7)
+	)
+);
 
-// Render
-echo $calender->serve(); // Render to string with headers
+// Render to string with headers
+echo $calender->serve();
 
 ```
+
 [See more examples](https://github.com/bvanhoekelen/icalendar-php/tree/master/examples).
 
 # Help, docs and links
