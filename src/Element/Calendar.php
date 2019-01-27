@@ -108,6 +108,12 @@ class Calendar extends Element {
 		return $this;
 	}
 
+	public function newEvent(): Event {
+		$event = new Event();
+		$this->eventList[] = $event;
+		return $event;
+	}
+
 	// Default
 	public function setDefault(): self {
 		$this->setVersion('2.0');

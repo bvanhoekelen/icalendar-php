@@ -5,7 +5,9 @@ use Calendar\Type\Attendee;
 use Calendar\Type\DateTime;
 use Calendar\Holder\PropertyHolder;
 use Calendar\Type\Geo;
+use Calendar\Type\Location;
 use Calendar\Type\RepeatingRule;
+use Prophecy\Exception\InvalidArgumentException;
 
 class Event extends Element {
 	const UID = 'UID';
@@ -124,7 +126,7 @@ class Event extends Element {
 		return $this;
 	}
 
-	public function setSequence(int $int): self {
+	public function setSequence(int $int = 0): self {
 		$this->property->set(static::SEQUENCE, $int);
 		return $this;
 	}
@@ -189,12 +191,21 @@ class Event extends Element {
 	}
 
 	// Location
-	public function setLocation(string $location): self {
+	public function setLocation($location): self {
+		if($location instanceof Location){
+			$location = $location->getLocationLine();
+		}
+		if(!is_string($location)){
+			throw new InvalidArgumentException("location has to be a instance of location class or string");
+		}
 		$this->property->set(static::LOCATION, $location);
 		return $this;
 	}
 
 	public function setGeo(Geo $geo): self {
+		if($geo == null){
+			return $this;
+		}
 		$this->property->set(static::GEO, $geo->latitude . ";" . $geo->longitude);
 		return $this;
 	}
@@ -204,20 +215,10 @@ class Event extends Element {
 		return $this;
 	}
 
-	public function setLocationWizard($title, $location, Geo $geo = null): self {
+	public function setLocationWizard(Location $location): self {
 		$this->setLocation($location);
-		$geoApple = "";
-		if (!is_null($geo)) {
-			$this->setGeo($geo);
-			$geoApple = ":geo:" . $geo->latitude . "," . $geo->longitude;
-		}
-		$this->property->set(static::X_APPLE_STRUCTURED_LOCATION, null, [
-			"VALUE" => "URI",
-			"X-ADDRESS" => $location,
-			"X-APPLE-RADIUS" => 50,
-			"X-TITLE" => '"' .$title . '"'. $geoApple,
-		]);
-
+		$this->setGeo($location->getGeo());
+		$this->property->setProperty($location->getAppleStructuredLocationProperty());
 		return $this;
 	}
 
@@ -234,7 +235,9 @@ class Event extends Element {
 		$this->setUid(md5(random_bytes(20)));
 		$this->setDtStamp(new \DateTime('now'));
 		$this->setSequence(0);
-		$this->setTransp(self::TRANSP_TRANSPARENT);
+		$this->setTransp(self::TRANSP_OPAQUE);
+		$this->setStatus(self::STATUS_CONFIRMED);
+
 	}
 
 	protected function prepareRepeat() {
