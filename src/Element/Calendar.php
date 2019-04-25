@@ -74,14 +74,14 @@ class Calendar extends Element {
 	}
 
 	public function setName(string $value): self {
-		$this->property->set(static::NAME, $value);
 		$this->property->set(static::X_WR_CALNAME, $value);
+		$this->property->set(static::NAME, $value); // Below X_WR_CALNAME for Google Calendar
 		return $this;
 	}
 
 	public function setDescription(string $value): self {
-		$this->property->set(static::DESCRIPTION, $value);
 		$this->property->set(static::X_WR_CALDESC, $value);
+		$this->property->set(static::DESCRIPTION, $value); // Below X_WR_CALDESC for Google Calendar
 		return $this;
 	}
 
